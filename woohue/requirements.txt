@@ -1,0 +1,11 @@
+certifi==2018.11.29
+chardet==3.0.4
+idna==2.8
+phue==1.0
+pick==0.6.4
+pip==18.1
+requests==2.21.0
+rgbxy==0.5
+setuptools==39.0.1
+toml==0.10.0
+urllib3==1.24.1
