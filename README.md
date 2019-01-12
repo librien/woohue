@@ -1,11 +1,22 @@
 # Woohue
 
-**Woohue** is a Python program that retrieves information from the public NHL API, and triggers a goal light celebration on color capable Philips Hue lights.
+**Woohue** is a Python program that retrieves information from the public NHL API, and triggers a goal light celebration on color capable Philips Hue lights.  
 
 Note: The NHL live score API is updated every 60 seconds, thus if you're watching live on TV the celebration could be triggered up to 59 seconds after a goal is scored.  I've had excellent results while watching through a streaming app such as NBC Sports.
 
 ## Installation
-    enter code here
+I  am currently working on setuptools installation. In the meantime:
+    
+     $ git clone https://github.com/librien/woohue
+     $ cd woohue
+
+Recommended to create a virtualenv (>= Python 3.6)
+
+	 $ pip install -r requirements.txt
+	
+Windows users will need to manually install curses to run configuration.  
+
+	 $ pip install windows-curses
 
 ## Setup
 ### Start Bridge Discovery
