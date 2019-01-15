@@ -1,5 +1,6 @@
 from pprint import pprint
 from urllib import request
+from optparse import OptionParser
 from itertools import cycle
 from rgbxy import Converter
 import datetime
@@ -28,6 +29,31 @@ def clear_screen():
     else:
         os.system('clear')
 
+def activate_goal_light(woohue_config, team):
+    team_colors = []
+    team_colors.append(team['primary-color']) # Team primary color
+    team_colors.append(team['secondary-color']) # Team secondary color
+    existingState = []
+    for light in woohue_config.goal_lights:
+        existingState.append(config.Bridge(woohue_config.ip).get_light(light, 'xy'))
+
+    converter = Converter()
+    for i, item in enumerate(team_colors):
+        xy_color = converter.hex_to_xy(item)
+        team_colors[i] = xy_color
+    c = cycle(team_colors)
+    for i in range(9):
+        team_color = next(c)
+        try:
+            config.Bridge(woohue_config.ip).set_light(woohue_config.goal_lights, 'xy', team_color, transitiontime=0)
+        except Exception as e:
+            print(e)
+        time.sleep(.5)
+
+    #Restore previous color values
+    for i in range(2):
+        config.Bridge(woohue_config.ip).set_light(woohue_config.goal_lights[i], 'xy', existingState[i])
+
 class configuration:
     def __init__(self, config_obj):
         self.config = config_obj
@@ -35,7 +61,12 @@ class configuration:
         self.goal_lights = self.config['Goal_Lights']['Lights']
         self.teams = self.config['Teams']['Team']
 
-woohue_config = configuration(config.open_config())
+try:
+    woohue_config = configuration(config.open_config())
+except Exception as e:
+    print(e)
+else:
+    activate_goal_light(woohue_config, woohue_config.teams[0])
 
 class game:
     def __init__(self, team):
@@ -203,31 +234,6 @@ def get_teams():
     api_url = ("https://statsapi.web.nhl.com/api/v1/teams")
     teams = requests.get(api_url).json()
     return teams
-
-def activate_goal_light(woohue_config, team):
-    team_colors = []
-    team_colors.append(team['primary-color']) # Team primary color
-    team_colors.append(team['secondary-color']) # Team secondary color
-    restoreHues = []
-    for light in woohue_config.goal_lights:
-        restoreHues.append(config.Bridge(woohue_config.ip).get_light(light, 'xy'))
-
-    converter = Converter()
-    for i, item in enumerate(team_colors):
-        xy_color = converter.hex_to_xy(item)
-        team_colors[i] = xy_color
-    c = cycle(team_colors)
-    for i in range(9):
-        team_color = next(c)
-        try:
-            config.Bridge(woohue_config.ip).set_light(woohue_config.goal_lights, 'xy', team_color, transitiontime=0)
-        except Exception as e:
-            print(e)
-        time.sleep(.5)
-
-    #Restore previous color values
-    for i in range(2):
-        config.Bridge(woohue_config.ip).set_light(woohue_config.goal_lights[i], 'xy', restoreHues[i])
 
 if __name__ == "__main__":
     main()
