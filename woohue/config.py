@@ -17,7 +17,7 @@ def main():
 
 def get_bridge_ip():
     try:
-        input('Please press the round button on your Hue Bridge and then press Enter to continue')
+        input('Please press the round button on your Hue Bridge and then press enter to continue.')
         print('Searching for Hue Bridge...')
         
         '''
@@ -26,7 +26,8 @@ def get_bridge_ip():
         #ip = bridge.get_ip_address()
         '''
         ip = requests.get("https://www.meethue.com/api/nupnp").json()[0]['internalipaddress']
-        print('Hue Bridge discovered successfully')
+        print('Hue Bridge discovered successfully.')
+        print('Please ensure your lights are powered on and currently illuminated.  Press enter to continue.')
     except Exception as e:
         print('Unable to find Hue Bridge')
         print(e)
