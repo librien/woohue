@@ -182,7 +182,7 @@ class game:
                     time.sleep(1)
             elif (self.status == 2):
                 self.ice_time = "Pregame"
-                #print("Pregame! Waiting for puckdrop...")
+                print("Pregame! Waiting for puckdrop...")
                 time.sleep(30)
             elif (self.status > 2 and self.status < 6):
                 '''
