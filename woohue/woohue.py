@@ -3,6 +3,7 @@ from urllib import request
 from optparse import OptionParser
 from itertools import cycle
 from rgbxy import Converter
+from recursivejson import extract_values
 import datetime
 import json
 import os
@@ -134,10 +135,13 @@ class game:
             self.score = self.game['linescore']['teams'][self.home_or_away]['goals']
             self.initial_score = self.game['linescore']['teams'][home_or_away(self)]['goals']
         except IndexError:
-            print("\rNo games scheduled for today")
+            next_game_url = ("https://statsapi.web.nhl.com/api/v1/teams/" + str(self.team['id']) + "?expand=team.schedule.next")
+            game_sched = requests.get(next_game_url)
+            next_game_date = extract_values(game_sched.json(), 'date')
+            print("\rNo games scheduled for today. The next game hits the ice on "+ next_game_date)
             '''
             Todo: Figure out a way to sleep / rerun script next day when a game is scheduled.
-            Implement offseason handling?
+            Implement offseason handling? neat, no
             '''
             input('Try running the program on gameday. Press enter to exit.')
             sys.exit()
